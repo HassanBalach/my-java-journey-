@@ -67,11 +67,46 @@ class BankAccount{
     }
 
 
+    public void displayInfo() {
+        System.out.println("===== Account Info =====");
+        System.out.println("Account Holder: " + accountHolder);
+        System.out.println("Account Number: " + accountNumber);
+        System.out.println("Balance: Rs." + balance);
+    }
 
 
 }
 
+class SavingAccount extends BankAccount {
+    private double interestRate;
 
+    public SavingAccount(String accountHolder , String accountNumber , double balance , double interestRate){
+        super(accountHolder , accountNumber , balance);
+        setInterestRate(interestRate);
+
+    }
+
+    public void setInterestRate(double interestRate){
+        if(interestRate < 0 || interestRate > 100){
+            throw new IllegalArgumentException("Interest rate must be between 0 and 100!");
+        }
+        this.interestRate = interestRate;
+
+    }
+
+    public void addInterest(){
+        double interest = getBalance() * interestRate / 100;
+        deposit(interest);
+        System.out.println("🎉 Interest Added: Rs." + interest);
+    }
+
+    @Override
+    public void displayInfo() {
+        super.displayInfo();   // prints name, number, balance
+        System.out.println("Interest Rate: " + interestRate + "%");  // extra info!
+    }
+
+}
 
 public class BankAccountSystem {
     public static void main(String[] args) {
@@ -93,6 +128,8 @@ public class BankAccountSystem {
             System.out.println("1️⃣ For Account creation: ");
             System.out.println("2️⃣ For Sending Money to Account: ");
             System.out.println("3️⃣ For withdrawing Money from Account: ");
+            System.out.println("4️⃣ Add Interest to Savings Account");
+
 
             int accountPress = input.nextInt();
             input.nextLine();
@@ -101,6 +138,13 @@ public class BankAccountSystem {
                 case 1:
 
                     System.out.println("========== Create Your First Account ============");
+
+                    System.out.println("Select Account Type:");
+                    System.out.println("1️⃣ Regular Account");
+                    System.out.println("2️⃣ Savings Account");
+                    int accountType = input.nextInt();
+                    input.nextLine();
+
 
                     System.out.println("Enter your Name? ");
                     String accountName = input.nextLine();
@@ -122,8 +166,13 @@ public class BankAccountSystem {
                     } else {
                         System.out.println("Enter Opening Balance");
                         double balance = input.nextDouble();
-
-                        accounts.add(new BankAccount(accountName, accountNumber, balance));
+                        if(accountType == 1){
+                            accounts.add(new BankAccount(accountName, accountNumber, balance));
+                        }else if(accountType == 2){
+                            System.out.println("Enter Interest Rate %:");
+                            double interestRate = input.nextDouble();
+                            accounts.add(new SavingAccount(accountName, accountNumber, balance , interestRate));
+                        }
                         System.out.println("🎉 Account created successfully!");
                         System.out.println(" ");
 
@@ -175,6 +224,30 @@ public class BankAccountSystem {
 
                     }
                     break;
+
+                case 4:
+
+                    System.out.println("Enter Your Account Number:");
+                    String intNumber = input.nextLine();
+
+                    // Find the account
+                    BankAccount foundAcc = null;
+                    for(BankAccount acc : accounts) {
+                        if(acc.getAccountNumber().equals(intNumber)) {
+                            foundAcc = acc;
+                            break;
+                        }
+                    }
+
+                    if(foundAcc == null) {
+                        System.out.println("❌ Account not found!");
+                    } else if(foundAcc instanceof SavingAccount) {
+                        ((SavingAccount) foundAcc).addInterest();  // ✅ call addInterest!
+                    } else {
+                        System.out.println("❌ This is not a Savings Account!");
+                    }
+                    break;
+
                 default:
                     System.out.println("Sorry There Are Some Technical Issues:");
                     break;
@@ -185,3 +258,9 @@ public class BankAccountSystem {
 
 
 }
+
+
+
+
+
+
