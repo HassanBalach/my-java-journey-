@@ -8,10 +8,10 @@ abstract class Shape{
 }
 
 class Circle extends Shape{
-    // circle has radious:
-    private double radious;
+    // circle has radius:
+    private double radius;
 
-    public Circle(double radious){
+    public Circle(double radius){
         this.radious = radious;
     }
 
