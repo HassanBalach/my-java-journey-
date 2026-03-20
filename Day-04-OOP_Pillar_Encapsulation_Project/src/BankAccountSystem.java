@@ -252,8 +252,9 @@ public class BankAccountSystem {
                     System.out.println("Sorry There Are Some Technical Issues:");
                     break;
             }
-
+            input.close();
         }
+
     }
 
 
